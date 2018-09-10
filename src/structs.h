@@ -1,5 +1,3 @@
-
-
 typedef struct {
   double r;
   double g;
@@ -17,7 +15,7 @@ typedef struct line{
 
 typedef enum token_types
 {
-	KEYWORD = 200, OP = 201, ID = 202, CONSTANT = 203, STRING_LITERAL = 204, SEP = 205, ASSIGN = 206
+	CONSTANT = 203
 } TokenType;
 
 typedef enum province_number
@@ -30,6 +28,7 @@ typedef struct token
 	int tokenCode;
 	char* lexeme;
 	int lineNumber;
+	int token_length;
 } TokenInfo;
 
 

@@ -1,15 +1,15 @@
-
 #include "getToken.c"
 
-//void append(TokenType type);
-//void lookup(int tokenID);
-int scanner(char* fileName, int province_number);
+int scanner(char* fileName, int province_number, Line ***polygons, int points_number);
+void process_token(int province_number, Line ***polygons, int points_number, int current_line);
+double get_y_value(TokenInfo token);
+double get_x_value(TokenInfo token);
 
-
-//Token *head = NULL;
 char* tokenType;
 FILE *errors;
-int scanner(char* fileName, int province_number)
+TokenInfo tokenID;
+
+int scanner(char* fileName, int province_number, Line ***polygons, int points_number)
 {
 	yyin = fopen(fileName, "r");
 	if (yyin == NULL)
@@ -18,64 +18,77 @@ int scanner(char* fileName, int province_number)
 		return 0;
 	}
 	
-	TokenInfo tokenID;
 	//Token *current = NULL;
 	int newLine = 0;
 	tokenID = getToken();
-	double x;
-	
+	tokenID = getToken();
+	double x0, y0, x1, y1;
+	int current_line = 0;
+
 	while (tokenID.tokenCode)	//loop while nextToken() != 0 (null)
 	{ 
-		
-		//if (tokenID.tokenCode != 1000)
-		//	lookup(tokenID.tokenCode);
-		//x = atof(tokenID.lexeme);
-		printf("%s\n", tokenID.lexeme);
+		x0 = get_x_value(tokenID);
+		y0 = get_y_value(tokenID);				//start line
+		(*polygons)[province_number][current_line].x0 = x0;
+		(*polygons)[province_number][current_line].y0 = y0;
+
 		tokenID = getToken();
 					
-	}
+		x1 = get_x_value(tokenID);
+		y1 = get_y_value(tokenID);
+		(*polygons)[province_number][current_line].x1 = x1;		//end line
+		(*polygons)[province_number][current_line].y1 = y1;
 
+		tokenID = getToken(); //ignore third column
+		tokenID = getToken(); //start next line
+
+
+		current_line++;
+
+		//printf("%d\n", current_line);
+	}	
 	return 1;
 
 }
 
-/*void lookup(int tokenID)
+double get_x_value(TokenInfo token)
 {
-	int inside = 0;
-	if (tokenID == ',' || tokenID == '.' || tokenID == ';' || tokenID == '{' || tokenID == '}' ||
-			tokenID == ':' || tokenID == '(' || tokenID == ')' || tokenID == '[' || tokenID == ']')
-		tokenID = SEP;
-	else if (tokenID == '=')
-		tokenID = ASSIGN;
-
-	Token *current = head;
-	while(current -> next != NULL)
+	double x;
+	char *current_double = calloc(token.token_length, sizeof(char));
+	for (int i = 0; i < token.token_length; i++)
 	{
-		if (current -> next -> tokenCode == tokenID)
-		{
-			current -> next -> count += 1;
-			inside = 1;
+		if (token.lexeme[i] == ',')
+		{	
+			x = atof(current_double);
+
 			break;
 		}
-		current = current -> next;
+		current_double[i] = token.lexeme[i];
 	}
-	if (inside != 1)
-		append(tokenID);
-}*/
+	free(current_double);
+	return x;
+}
 
-/*void append(TokenType type)
+double get_y_value(TokenInfo token)
 {
-	Token *current = head;
+	double y;
+	int second_value = 0;
 
-	while(current -> next != NULL)
+	int double_pos = 0;
+
+	char *current_double = calloc(token.token_length, sizeof(char));
+	for (int i = 0; i < token.token_length; i++)
 	{
-		current = current -> next;
+		if (second_value == 1)
+		{
+			current_double[double_pos++] = token.lexeme[i];
+		}
+		if (token.lexeme[i] == ',')
+		{	
+			second_value = 1;
+		}
 	}
-
-	current -> next = malloc(sizeof(Token));
-
-	current -> next -> tokenCode = type;
-	current -> next -> count = 1;
-	current->next->next = NULL; 
-	
-}	*/
+	y = atof(current_double);
+	free(current_double);
+	return y;
+}

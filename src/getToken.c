@@ -4,6 +4,7 @@
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
+extern int yyleng;
 extern char* strdup(char*);
 extern FILE* yyin;
 
@@ -17,7 +18,8 @@ TokenInfo getToken(void)
 	data.tokenCode = yylex();
 	data.lexeme = strdup(yytext);
 	data.lineNumber = yylineno;
-	
+	data.token_length = yyleng;
+
 	return data;
 }
 
