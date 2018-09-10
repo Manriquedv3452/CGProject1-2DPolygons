@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	
 	
 	//Start scanning process
-	scanner("Guanacaste.txt", GUANACASTE);
+	scanner("../points/Guanacaste.txt", GUANACASTE);
 
 
 	return 1;
