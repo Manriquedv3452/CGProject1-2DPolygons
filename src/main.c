@@ -6,7 +6,16 @@
 #include "line_algorithms.c"
 
 #define PLACES_NUMBER 8
-#define GSIZE 248
+
+#define SANJOSE_POINTS 298
+#define ALAJUELA_POINTS 463
+#define CARTAGO_POINTS 131
+#define HEREDIA_POINTS 145
+#define GUANACASTE_POINTS 472
+#define PUNTARENAS_POINTS 545
+#define PUNTARENAS2_POINTS 131
+#define LIMON_POINTS 250
+
 
 int convert_framebuffer_coord(int t_resolution, double t_window, double t_max, double t_min);
 void display_points(void);
@@ -44,9 +53,23 @@ int main(int argc, char *argv[])
 	ymax = vertical_resolution;
 
 	polygons = calloc(PLACES_NUMBER, sizeof(Line));
-	polygons[GUANACASTE] = calloc(GSIZE, sizeof(Line));
+	polygons[SANJOSE] = calloc(SANJOSE_POINTS, sizeof(Line));
+	polygons[ALAJUELA] = calloc(ALAJUELA_POINTS, sizeof(Line));
+	polygons[CARTAGO] = calloc(CARTAGO_POINTS, sizeof(Line));
+	polygons[HEREDIA] = calloc(HEREDIA_POINTS, sizeof(Line));
+	polygons[GUANACASTE] = calloc(GUANACASTE_POINTS, sizeof(Line));
+	polygons[PUNTARENAS] = calloc(PUNTARENAS_POINTS, sizeof(Line));
+	polygons[PUNTARENAS2] = calloc(PUNTARENAS2_POINTS, sizeof(Line));
+	polygons[LIMON] = calloc(LIMON_POINTS, sizeof(Line));
 
-	scanner("../points/Guanacaste.svg", GUANACASTE, &polygons, GSIZE);
+	scanner("../points/SanJose.svg", SANJOSE, &polygons, SANJOSE_POINTS);
+	scanner("../points/Alajuela.svg", ALAJUELA, &polygons, ALAJUELA_POINTS);
+	scanner("../points/Cartago.svg", CARTAGO, &polygons, CARTAGO_POINTS);
+	scanner("../points/Heredia.svg", HEREDIA, &polygons, HEREDIA_POINTS);
+	scanner("../points/Guanacaste.svg", GUANACASTE, &polygons, GUANACASTE_POINTS);
+	scanner("../points/Puntarenas.svg", PUNTARENAS, &polygons, PUNTARENAS_POINTS);
+	scanner("../points/Puntarenas2.svg", PUNTARENAS2, &polygons, PUNTARENAS2_POINTS);
+	scanner("../points/Limon.svg", LIMON, &polygons, LIMON_POINTS);
 	
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -65,8 +88,103 @@ void display_points(void)
 {
 	int x0, y0, x1, y1;
 
+	//SAN JOSE
+	glColor3f(0, 1, 1);
+	for (int i = 0; i < SANJOSE_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[SANJOSE][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[SANJOSE][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[SANJOSE][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[SANJOSE][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+	
+
+	//ALAJUELA
+	glColor3f(0, 1, 0);
+	for (int i = 0; i < ALAJUELA_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[ALAJUELA][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[ALAJUELA][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[ALAJUELA][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[ALAJUELA][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+
+
+	//CARTAGO
+	glColor3f(1, 1, 1);
+	for (int i = 0; i < CARTAGO_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[CARTAGO][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[CARTAGO][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[CARTAGO][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[CARTAGO][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+
+	//HEREDIA
+	glColor3f(1, 1, 0);
+	for (int i = 0; i < HEREDIA_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[HEREDIA][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[HEREDIA][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[HEREDIA][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[HEREDIA][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+
+	//GUANACASTE
 	glColor3f(0, 0, 1);
-	for (int i = 0; i < GSIZE; i++)
+	for (int i = 0; i < GUANACASTE_POINTS; i++)
 	{
 		x0 = convert_framebuffer_coord(
 			horizontal_resolution, polygons[GUANACASTE][i].x0, xmax, xmin
@@ -87,6 +205,77 @@ void display_points(void)
 		bresenham_algorithm (x0, y0, x1, y1);
 	}
 
+
+	//PUNTARENAS
+	glColor3f(1, 0, 0);
+	for (int i = 0; i < PUNTARENAS_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[PUNTARENAS][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[PUNTARENAS][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[PUNTARENAS][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[PUNTARENAS][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+
+	glColor3f(1, 0, 0);
+	for (int i = 0; i < PUNTARENAS2_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[PUNTARENAS2][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[PUNTARENAS2][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[PUNTARENAS2][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[PUNTARENAS2][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+
+
+	//LIMON
+	glColor3f(1, 0, 1);
+	for (int i = 0; i < LIMON_POINTS; i++)
+	{
+		x0 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[LIMON][i].x0, xmax, xmin
+		);
+
+		y0 = convert_framebuffer_coord(
+			vertical_resolution, polygons[LIMON][i].y0, ymax, ymin
+		);
+
+		x1 = convert_framebuffer_coord(
+			horizontal_resolution, polygons[LIMON][i].x1, xmax, xmin
+		);
+
+		y1 = convert_framebuffer_coord(
+			vertical_resolution, polygons[LIMON][i].y1, ymax, ymin
+		);
+		
+		bresenham_algorithm (x0, y0, x1, y1);
+	}
+
+	
 	glFlush();
 }
 
@@ -101,7 +290,7 @@ void display_points(void)
 */
 int convert_framebuffer_coord(int t_resolution, double t_window, double t_max, double t_min)
 {
-	return  t_resolution * ((t_window - t_min)/(t_max - t_min));
+	return  (double)t_resolution * ((t_window - t_min)/(t_max - t_min));
 }
 
 //return -1 if the argument is invalid

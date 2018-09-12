@@ -27,23 +27,26 @@ int scanner(char* fileName, int province_number, Line ***polygons, int points_nu
 
 	while (tokenID.tokenCode)	//loop while nextToken() != 0 (null)
 	{ 
-		x0 = get_x_value(tokenID);
-		y0 = get_y_value(tokenID);				//start line
-		(*polygons)[province_number][current_line].x0 = x0;
-		(*polygons)[province_number][current_line].y0 = y0;
+		if (tokenID.tokenCode == CONSTANT)
+		{
+			x0 = get_x_value(tokenID);
+			y0 = get_y_value(tokenID);				//start line
+			(*polygons)[province_number][current_line].x0 = x0;
+			(*polygons)[province_number][current_line].y0 = y0;
 
-		tokenID = getToken();
-					
-		x1 = get_x_value(tokenID);
-		y1 = get_y_value(tokenID);
-		(*polygons)[province_number][current_line].x1 = x1;		//end line
-		(*polygons)[province_number][current_line].y1 = y1;
+			tokenID = getToken();
+						
+			x1 = get_x_value(tokenID);
+			y1 = get_y_value(tokenID);
+			(*polygons)[province_number][current_line].x1 = x1;		//end line
+			(*polygons)[province_number][current_line].y1 = y1;
 
-		tokenID = getToken(); //ignore third column
-		tokenID = getToken(); //start next line
+			tokenID = getToken(); //ignore third column
+			tokenID = getToken(); //start next line
 
 
-		current_line++;
+			current_line++;
+		}
 
 		//printf("%d\n", current_line);
 	}	
