@@ -45,10 +45,10 @@ typedef enum province_number
 	SANJOSE = 0, ALAJUELA = 1, CARTAGO = 2, HEREDIA = 3, GUANACASTE = 4, PUNTARENAS = 5, LIMON = 6, PUNTARENAS2 = 7
 } ProvinceNum;
 
-#define ACTIONS 6
+#define ACTIONS 7
 typedef enum action_number
 {
-	I_KEY = 0, O_KEY = 1, R_KEY = 2, C_KEY = 3, P_KEY = 4, D_KEY = 5
+	I_KEY = 0, O_KEY = 1, R_KEY = 2, C_KEY = 3, P_KEY = 4, D_KEY = 5, A_KEY = 6
 } ActionNum;
 
 typedef struct token

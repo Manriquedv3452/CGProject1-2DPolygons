@@ -22,9 +22,13 @@
 
 #define HORIZONTAL_RESOLUTION 800
 #define VERTICAL_RESOLUTION 800
-#define ZOOM_INCREMENT 0.001
+#define ZOOM_INCREMENT 0.0001
 
-#define DEGREE_ROTATE 0.1
+#define FASTER_ZOOM 0.01
+#define FASTER_ROTATE 0.1
+#define FATER_PAN 20
+
+#define DEGREE_ROTATE 0.01
 
 #define PAN_DELTA 5
 
@@ -55,6 +59,10 @@ void get_original_points(void);
 
 int options[ACTIONS];
 
+double incremental_zoom = ZOOM_INCREMENT;
+double rotate_degree = DEGREE_ROTATE;
+double delta_pan = PAN_DELTA;
+
 
 int main(int argc, char *argv[])
 {
@@ -73,6 +81,14 @@ int main(int argc, char *argv[])
 			"\n LEFT = pan to left"
 			"\n DOWN = pan to bottom"
 			"\n UP = pan to up"
+			"\n a + i = zoom in faster"
+			"\n a + o = zoom out faster"
+			"\n a + r = rotate clockwise faster"
+			"\n a + c + r = rotate counterclockwise faster"
+			"\n a + RIGHT = pan to right faster"
+			"\n a + LEFT = pan to left faster"
+			"\n a + DOWN = pan to bottom faster"
+			"\n a + UP = pan to up faster"
 			"\n d = draw window"
 			"\n s = restart"
 			"\n f = finish\n\n");
@@ -212,12 +228,24 @@ void key_up(unsigned char key, int x, int y)
 		case 'i': options[I_KEY] = 0; break;
 		case 'r': options[R_KEY] = 0; break;
 		case 'c': options[C_KEY] = 0; break;
+		case 'a': 
+			options[A_KEY] = 0; 
+			incremental_zoom = ZOOM_INCREMENT;
+			rotate_degree = DEGREE_ROTATE;
+			delta_pan = PAN_DELTA;
+			break;
 		default:
 			return;
 	}
 }
 void key_down(unsigned char key, int x, int y)
 {		
+	if (options[A_KEY])
+	{
+		incremental_zoom = FASTER_ZOOM;
+		rotate_degree = FASTER_ROTATE;
+		delta_pan = FATER_PAN;
+	}
 	if (key == 'o')
 	{
 		options[O_KEY] = 1;
@@ -229,19 +257,20 @@ void key_down(unsigned char key, int x, int y)
 		options[I_KEY] = 1;
 		zoom_in();
 	}
-	
+
 	else if(key == 'r' && !options[C_KEY])
 	{
 		options[R_KEY] = 1;
 		rotate_provinces_clockwise();
 	}
-	else if (key == 'c')
-	{
-		options[C_KEY] = 1;
-	}
 	else if (key == 'r' && options[C_KEY])
 	{
 		rotate_provinces_counterclockwise();
+	}
+
+	else if (key == 'c')
+	{
+		options[C_KEY] = 1;
 	}
 	else if (key == 's')
 	{
@@ -263,6 +292,10 @@ void key_down(unsigned char key, int x, int y)
 	{
 		options[D_KEY] = options[D_KEY] == 1 ? 0 : 1;
 	}
+	else if (key == 'a')
+	{
+		options[A_KEY] = 1;
+	}
 	else if (key == 'f')
 	{
 		exit(1);
@@ -273,13 +306,13 @@ void key_down(unsigned char key, int x, int y)
 void rotate_provinces_clockwise(void)
 {
 	for (int i = 0; i < PLACES_NUMBER; i++)
-		rotate_province_clockwise(DEGREE_ROTATE, provinces_detail, i);
+		rotate_province_clockwise(rotate_degree, provinces_detail, i);
 }
 
 void rotate_provinces_counterclockwise(void)
 {
 	for (int i = 0; i < PLACES_NUMBER; i++)
-		rotate_province_counterclockwise(DEGREE_ROTATE, provinces_detail, i);
+		rotate_province_counterclockwise(rotate_degree, provinces_detail, i);
 }
 
 void zoom_in(void)
@@ -289,7 +322,7 @@ void zoom_in(void)
 			
 	if (zoom > 0)
 	{
-		zoom -= ZOOM_INCREMENT;
+		zoom -= incremental_zoom;
 	}
 	
 	xmin = ((xmin - xc) * zoom) + xc;
@@ -306,7 +339,7 @@ void zoom_out(void)
 	if (zoom < 1.0)
 			zoom = 1.0;
 
-	zoom += ZOOM_INCREMENT;
+	zoom += incremental_zoom;
 
 	xmin = ((xmin - xc) * zoom) + xc;
 	ymin = ((ymin - yc) * zoom) + yc;
@@ -320,12 +353,16 @@ void zoom_out(void)
 void pan_operations(int key, int x, int y)
 {
 	double delta_x = 0, delta_y = 0;
+	if (options[A_KEY])
+	{
+		delta_pan = 20;
+	}
     switch (key)
     {
-		case GLUT_KEY_UP: delta_y = PAN_DELTA; break;
-		case GLUT_KEY_DOWN:	delta_y = -PAN_DELTA; break;
-		case GLUT_KEY_RIGHT: delta_x = PAN_DELTA; break;
-		case GLUT_KEY_LEFT:	delta_x = -PAN_DELTA; break;
+		case GLUT_KEY_UP: delta_y = delta_pan; break;
+		case GLUT_KEY_DOWN:	delta_y = -delta_pan; break;
+		case GLUT_KEY_RIGHT: delta_x = delta_pan; break;
+		case GLUT_KEY_LEFT:	delta_x = -delta_pan; break;
         default:
 	    return;
     }
