@@ -1,6 +1,6 @@
 #include "getToken.c"
 
-int scanner(char* fileName, int province_number, Line ***polygons, int points_number);
+int scanner(char* fileName, int province_number, Line ***polygons, Province **province);
 void process_token(int province_number, Line ***polygons, int points_number, int current_line);
 double get_y_value(TokenInfo token);
 double get_x_value(TokenInfo token);
@@ -9,7 +9,7 @@ char* tokenType;
 FILE *errors;
 TokenInfo tokenID;
 
-int scanner(char* fileName, int province_number, Line ***polygons, int points_number)
+int scanner(char* fileName, int province_number, Line ***polygons, Province **province)
 {
 	yyin = fopen(fileName, "r");
 	if (yyin == NULL)
@@ -41,10 +41,16 @@ int scanner(char* fileName, int province_number, Line ***polygons, int points_nu
 			(*polygons)[province_number][current_line].x1 = x1;		//end line
 			(*polygons)[province_number][current_line].y1 = y1;
 
+			(*province)[province_number].sum_x0 += x0;
+
+			(*province)[province_number].sum_y0 += y0;
+			(*province)[province_number].sum_x1 += x1;
+			(*province)[province_number].sum_y1 += y1;	
+
 			tokenID = getToken(); //ignore third column
 			tokenID = getToken(); //start next line
 
-
+			(*polygons)[province_number][current_line].accepted = 1;
 			current_line++;
 		}
 
