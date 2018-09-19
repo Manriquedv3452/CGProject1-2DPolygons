@@ -212,6 +212,8 @@ void key_up(unsigned char key, int x, int y)
 		case 'i': options[I_KEY] = 0; break;
 		case 'r': options[R_KEY] = 0; break;
 		case 'c': options[C_KEY] = 0; break;
+		default:
+			return;
 	}
 }
 void key_down(unsigned char key, int x, int y)
